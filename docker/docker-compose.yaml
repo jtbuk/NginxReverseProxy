@@ -1,0 +1,55 @@
+name: dev-dependencies
+
+networks:
+  dev-network:
+    name: dev-network
+    driver: bridge
+
+services:    
+  nginx-reverse-proxy:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+    container_name: dev-reverse-proxy
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - dev-network
+    volumes:
+      - ./certs/:/etc/ssl/certs
+
+  my-website:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+    container_name: my-website
+    build:
+      context: sites
+      dockerfile: my-website.Dockerfile
+    ports:
+      - 1338:80
+    networks:
+      - dev-network
+
+  admin.my-website:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+    container_name: admin.my-website
+    build:
+      context: sites
+      dockerfile: admin-my-website.Dockerfile
+    ports:
+      - 1337:80
+    networks:
+      - dev-network
