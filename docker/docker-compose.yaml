@@ -1,4 +1,4 @@
-name: dev-dependencies
+name: reverse-proxy-example
 
 networks:
   dev-network:
